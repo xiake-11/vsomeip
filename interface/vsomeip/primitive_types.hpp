@@ -8,6 +8,7 @@
 
 #include <array>
 #include <cstdint>
+#include <string>
 
 namespace vsomeip {
 
