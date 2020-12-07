@@ -20,4 +20,7 @@
 
 namespace vsomeip = vsomeip_v3;
 
+#include <vsomeip/primitive_types.hpp>
+#include <vsomeip/enumeration_types.hpp>
+
 #endif // VSOMEIP_VSOMEIP_HPP
