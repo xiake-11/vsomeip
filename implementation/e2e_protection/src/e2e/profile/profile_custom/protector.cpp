@@ -3,8 +3,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../../../../../e2e_protection/include/e2e/profile/profile_custom/protector.hpp"
-#include "../../../../../logging/include/logger.hpp"
+#include <e2e/profile/profile_custom/protector.hpp>
+#include <logger.hpp>
 
 #include <iostream>
 #include <sstream>

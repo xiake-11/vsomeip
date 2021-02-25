@@ -114,6 +114,8 @@ endif(NOT SystemD_FOUND)
 include_directories(
     include
     implementation/helper
+    implementation/e2e_protection/include
+    implementation/logging/include
     ${DLT_INCLUDE_DIRS}
 )
 
