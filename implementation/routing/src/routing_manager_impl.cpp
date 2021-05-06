@@ -4082,6 +4082,10 @@ void routing_manager_impl::on_net_interface_or_route_state_changed(
 }
 
 void routing_manager_impl::start_ip_routing() {
+#ifdef _WIN32
+    if_state_running_ = true;
+#endif
+
     if (discovery_) {
         discovery_->start();
     } else {
