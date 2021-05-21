@@ -49,7 +49,7 @@ local_server_endpoint_impl::local_server_endpoint_impl(
 
 #ifndef _WIN32
     if (_host->get_configuration()->is_security_enabled()) {
-        credentials::activate_credentials(acceptor_.native());
+        credentials::activate_credentials(acceptor_.native_handle());
     }
 #endif
 }
@@ -73,7 +73,7 @@ local_server_endpoint_impl::local_server_endpoint_impl(
 
 #ifndef _WIN32
     if (_host->get_configuration()->is_security_enabled()) {
-        credentials::activate_credentials(acceptor_.native());
+        credentials::activate_credentials(acceptor_.native_handle());
     }
 #endif
 }
@@ -208,7 +208,7 @@ void local_server_endpoint_impl::accept_cbk(
                 uid_t uid(0);
                 gid_t gid(0);
                 client_t client = credentials::receive_credentials(
-                     new_connection_socket.native(), uid, gid);
+                     new_connection_socket.native_handle(), uid, gid);
                 if (!its_host->check_credentials(client, uid, gid)) {
                      VSOMEIP_WARNING << std::hex << "Client 0x" << its_host->get_client()
                              << " received client credentials from client 0x" << client
@@ -220,7 +220,7 @@ void local_server_endpoint_impl::accept_cbk(
                      return;
                 }
                 _connection->set_bound_client(client);
-                credentials::deactivate_credentials(new_connection_socket.native());
+                credentials::deactivate_credentials(new_connection_socket.native_handle());
             }
         }
 #endif

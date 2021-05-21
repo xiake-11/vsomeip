@@ -7,6 +7,7 @@
 #define VSOMEIP_INTERNAL_UDP_SERVICE_IMPL_HPP
 
 #include <boost/asio/io_service.hpp>
+#include <boost/asio/ip/udp.hpp>
 #include <boost/asio/ip/udp_ext.hpp>
 
 #include <vsomeip/defines.hpp>
@@ -17,7 +18,7 @@
 namespace vsomeip {
 
 typedef server_endpoint_impl<
-            boost::asio::ip::udp_ext
+            boost::asio::ip::udp
         > udp_server_endpoint_base_impl;
 
 class udp_server_endpoint_impl: public udp_server_endpoint_base_impl {

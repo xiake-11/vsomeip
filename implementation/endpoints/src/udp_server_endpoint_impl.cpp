@@ -26,7 +26,7 @@ udp_server_endpoint_impl::udp_server_endpoint_impl(
         endpoint_type _local,
         boost::asio::io_service &_io,
         configuration::endpoint_queue_limit_t _queue_limit)
-    : server_endpoint_impl<ip::udp_ext>(
+    : server_endpoint_impl<ip::udp>(
             _host, _local, _io, VSOMEIP_MAX_UDP_MESSAGE_SIZE, _queue_limit),
       socket_(_io, _local.protocol()),
       joined_group_(false),
@@ -62,11 +62,11 @@ udp_server_endpoint_impl::udp_server_endpoint_impl(
 
 #ifdef _WIN32
     const char* optval("0001");
-    ::setsockopt(socket_.native(), IPPROTO_IP, IP_PKTINFO,
+    ::setsockopt(socket_.native_handle(), IPPROTO_IP, IP_PKTINFO,
         optval, sizeof(optval));
 #else
     int optval(1);
-    ::setsockopt(socket_.native(), IPPROTO_IP, IP_PKTINFO,
+    ::setsockopt(socket_.native_handle(), IPPROTO_IP, IP_PKTINFO,
         &optval, sizeof(optval));
 #endif
 }
@@ -86,6 +86,9 @@ void udp_server_endpoint_impl::stop() {
     server_endpoint_impl::stop();
     {
         std::lock_guard<std::mutex> its_lock(socket_mutex_);
+
+        boost::asio::ip::address _destination;
+
         if (socket_.is_open()) {
             boost::system::error_code its_error;
             socket_.shutdown(socket_type::shutdown_both, its_error);
@@ -106,7 +109,8 @@ void udp_server_endpoint_impl::receive() {
                     udp_server_endpoint_impl >(shared_from_this()),
                 std::placeholders::_1,
                 std::placeholders::_2,
-                std::placeholders::_3
+                //std::placeholders::_3
+                _destination
             )
         );
     }
@@ -179,7 +183,7 @@ void udp_server_endpoint_impl::join(const std::string &_address) {
             }
             if (is_v4) {
                 std::lock_guard<std::mutex> its_lock(socket_mutex_);
-                socket_.set_option(ip::udp_ext::socket::reuse_address(true));
+                socket_.set_option(ip::udp::socket::reuse_address(true));
                 socket_.set_option(
                     boost::asio::ip::multicast::enable_loopback(false));
 #ifdef _WIN32
@@ -192,7 +196,7 @@ void udp_server_endpoint_impl::join(const std::string &_address) {
 #endif
             } else if (is_v6) {
                 std::lock_guard<std::mutex> its_lock(socket_mutex_);
-                socket_.set_option(ip::udp_ext::socket::reuse_address(true));
+                socket_.set_option(ip::udp::socket::reuse_address(true));
                 socket_.set_option(
                     boost::asio::ip::multicast::enable_loopback(false));
 #ifdef _WIN32

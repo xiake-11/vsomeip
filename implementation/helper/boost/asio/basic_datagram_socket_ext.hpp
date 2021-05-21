@@ -44,7 +44,7 @@ namespace asio {
 template <typename Protocol,
     typename DatagramSocketService = datagram_socket_service_ext<Protocol> >
 class basic_datagram_socket_ext
-  : public basic_socket<Protocol, DatagramSocketService>
+  : public basic_socket<Protocol>
 {
 public:
   /// (Deprecated: Use native_handle_type.) The native representation of a
@@ -70,7 +70,7 @@ public:
    * socket.
    */
   explicit basic_datagram_socket_ext(boost::asio::io_service& io_service)
-    : basic_socket<Protocol, DatagramSocketService>(io_service)
+    : basic_socket<Protocol>(io_service)
   {
   }
 
@@ -88,7 +88,7 @@ public:
    */
   basic_datagram_socket_ext(boost::asio::io_service& io_service,
       const protocol_type& protocol)
-    : basic_socket<Protocol, DatagramSocketService>(io_service, protocol)
+    : basic_socket<Protocol>(io_service, protocol)
   {
   }
 
@@ -110,7 +110,7 @@ public:
    */
   basic_datagram_socket_ext(boost::asio::io_service& io_service,
       const endpoint_type& endpoint)
-    : basic_socket<Protocol, DatagramSocketService>(io_service, endpoint)
+    : basic_socket<Protocol>(io_service, endpoint)
   {
   }
 
@@ -131,7 +131,7 @@ public:
    */
   basic_datagram_socket_ext(boost::asio::io_service& io_service,
       const protocol_type& protocol, const native_handle_type& native_socket)
-    : basic_socket<Protocol, DatagramSocketService>(
+    : basic_socket<Protocol>(
         io_service, protocol, native_socket)
   {
   }
@@ -148,7 +148,7 @@ public:
    * constructed using the @c basic_datagram_socket(io_service&) constructor.
    */
   basic_datagram_socket_ext(basic_datagram_socket_ext&& other)
-    : basic_socket<Protocol, DatagramSocketService>(
+    : basic_socket<Protocol>(
         BOOST_ASIO_MOVE_CAST(basic_datagram_socket_ext)(other))
   {
   }
@@ -166,7 +166,7 @@ public:
    */
   basic_datagram_socket_ext& operator=(basic_datagram_socket_ext&& other)
   {
-    basic_socket<Protocol, DatagramSocketService>::operator=(
+    basic_socket<Protocol>::operator=(
         BOOST_ASIO_MOVE_CAST(basic_datagram_socket_ext)(other));
     return *this;
   }
@@ -186,7 +186,7 @@ public:
   basic_datagram_socket_ext(
       basic_datagram_socket_ext<Protocol1, DatagramSocketService1>&& other,
       typename enable_if<is_convertible<Protocol1, Protocol>::value>::type* = 0)
-    : basic_socket<Protocol, DatagramSocketService>(
+    : basic_socket<Protocol>(
         BOOST_ASIO_MOVE_CAST2(basic_datagram_socket_ext<
           Protocol1, DatagramSocketService1>)(other))
   {
@@ -209,7 +209,7 @@ public:
       basic_datagram_socket_ext>::type& operator=(
         basic_datagram_socket_ext<Protocol1, DatagramSocketService1>&& other)
   {
-    basic_socket<Protocol, DatagramSocketService>::operator=(
+    basic_socket<Protocol>::operator=(
         BOOST_ASIO_MOVE_CAST2(basic_datagram_socket_ext<
           Protocol1, DatagramSocketService1>)(other));
     return *this;

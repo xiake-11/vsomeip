@@ -125,7 +125,7 @@ void local_client_endpoint_impl::connect() {
                 auto its_host = host_.lock();
                 if (its_host) {
                     if (its_host->get_configuration()->is_security_enabled()) {
-                        credentials::send_credentials(socket_->native(),
+                        credentials::send_credentials(socket_->native_handle(),
                                 its_host->get_client());
                     }
                 }

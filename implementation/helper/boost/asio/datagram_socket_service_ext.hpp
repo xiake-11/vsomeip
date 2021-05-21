@@ -228,7 +228,7 @@ public:
       const endpoint_type& peer_endpoint,
       BOOST_ASIO_MOVE_ARG(ConnectHandler) handler)
   {
-    detail::async_result_init<
+    async_result<
       ConnectHandler, void (boost::system::error_code)> init(
         BOOST_ASIO_MOVE_CAST(ConnectHandler)(handler));
 
@@ -325,7 +325,7 @@ public:
       socket_base::message_flags flags,
       BOOST_ASIO_MOVE_ARG(WriteHandler) handler)
   {
-    detail::async_result_init<
+    async_result<
       WriteHandler, void (boost::system::error_code, std::size_t)> init(
         BOOST_ASIO_MOVE_CAST(WriteHandler)(handler));
 
@@ -352,7 +352,7 @@ public:
       socket_base::message_flags flags,
       BOOST_ASIO_MOVE_ARG(WriteHandler) handler)
   {
-    detail::async_result_init<
+    async_result<
       WriteHandler, void (boost::system::error_code, std::size_t)> init(
         BOOST_ASIO_MOVE_CAST(WriteHandler)(handler));
 
@@ -380,7 +380,7 @@ public:
       socket_base::message_flags flags,
       BOOST_ASIO_MOVE_ARG(ReadHandler) handler)
   {
-    detail::async_result_init<
+    async_result<
       ReadHandler, void (boost::system::error_code, std::size_t)> init(
         BOOST_ASIO_MOVE_CAST(ReadHandler)(handler));
 
@@ -408,7 +408,7 @@ public:
       socket_base::message_flags flags,
       BOOST_ASIO_MOVE_ARG(ReadHandler) handler)
   {
-    detail::async_result_init<
+    async_result<
       ReadHandler, void (boost::system::error_code, std::size_t)> init(
         BOOST_ASIO_MOVE_CAST(ReadHandler)(handler));
 

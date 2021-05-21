@@ -138,7 +138,7 @@ size_t sync_recvfrom(socket_type s, state_type state, buf* bufs,
       return 0;
 
     // Wait for socket to become ready.
-    if (socket_ops::poll_read(s, 0, ec) < 0)
+    if (socket_ops::poll_read(s, 0, -1, ec) < 0)
       return 0;
   }
 }
