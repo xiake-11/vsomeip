@@ -27,7 +27,6 @@
 #include <boost/asio/error.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/socket_base.hpp>
-#include <boost/asio/detail/addressof.hpp>
 #include <boost/asio/detail/buffer_sequence_adapter.hpp>
 #include <boost/asio/detail/reactive_null_buffers_op.hpp>
 #include <boost/asio/detail/reactive_socket_recv_op_ext.hpp>
@@ -192,7 +191,7 @@ public:
       socket_base::message_flags, boost::system::error_code& ec)
   {
     // Wait for socket to become ready.
-    socket_ops::poll_write(impl.socket_, impl.state_, ec);
+    socket_ops::poll_write(impl.socket_, impl.state_, -1, ec);
 
     return 0;
   }
@@ -344,7 +343,7 @@ public:
       socket_base::message_flags& out_flags, boost::system::error_code& ec)
   {
     // Wait for socket to become ready.
-    socket_ops::poll_read(impl.socket_, impl.state_, ec);
+    socket_ops::poll_read(impl.socket_, impl.state_, -1, ec);
 
     // Clear out_flags, since we cannot give it any other sensible value when
     // performing a null_buffers operation.

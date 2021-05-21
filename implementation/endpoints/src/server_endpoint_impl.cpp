@@ -9,7 +9,7 @@
 
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/ip/tcp.hpp>
-#include <boost/asio/ip/udp_ext.hpp>
+#include <boost/asio/ip/udp.hpp>
 #include <boost/asio/local/stream_protocol.hpp>
 
 #include <vsomeip/defines.hpp>
@@ -58,8 +58,12 @@ bool server_endpoint_impl<Protocol>::is_connected() const {
 }
 
 template<typename Protocol>
-void server_endpoint_impl<Protocol>::set_connected(bool _connected) {    (void) _connected;}
-template<typename Protocol>bool server_endpoint_impl<Protocol>::send(const uint8_t *_data,
+void server_endpoint_impl<Protocol>::set_connected(bool _connected) {
+    (void) _connected;
+}
+
+template<typename Protocol>
+bool server_endpoint_impl<Protocol>::send(const uint8_t *_data,
         uint32_t _size, bool _flush) {
 #if 0
     std::stringstream msg;
@@ -305,6 +309,6 @@ void server_endpoint_impl<Protocol>::flush_cbk(
 template class server_endpoint_impl<boost::asio::local::stream_protocol>;
 #endif
 template class server_endpoint_impl<boost::asio::ip::tcp>;
-template class server_endpoint_impl<boost::asio::ip::udp_ext>;
+template class server_endpoint_impl<boost::asio::ip::udp>;
 
 }  // namespace vsomeip

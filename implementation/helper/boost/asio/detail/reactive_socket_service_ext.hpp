@@ -26,7 +26,6 @@
 #include <boost/asio/error.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/socket_base.hpp>
-#include <boost/asio/detail/addressof.hpp>
 #include <boost/asio/detail/buffer_sequence_adapter.hpp>
 #include <boost/asio/detail/noncopyable.hpp>
 #include <boost/asio/detail/reactive_null_buffers_op.hpp>

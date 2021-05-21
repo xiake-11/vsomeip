@@ -17,7 +17,6 @@
 #endif // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 #include <boost/asio/detail/config.hpp>
-#include <boost/asio/detail/addressof.hpp>
 #include <boost/asio/detail/bind_handler.hpp>
 #include <boost/asio/detail/buffer_sequence_adapter.hpp>
 #include <boost/asio/detail/fenced_block.hpp>
@@ -83,7 +82,7 @@ public:
   {
   }
 
-  static void do_complete(io_service_impl* owner, operation* base,
+  static void do_complete(io_service* owner, operation* base,
       const boost::system::error_code& /*ec*/,
       std::size_t /*bytes_transferred*/)
   {
