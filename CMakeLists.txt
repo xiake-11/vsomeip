@@ -80,7 +80,7 @@ include_directories(
 find_package(Threads REQUIRED)
 
 # Boost
-find_package( Boost 1.55 COMPONENTS system thread log REQUIRED )
+find_package( Boost 1.67 COMPONENTS system thread log REQUIRED )
 include_directories( ${Boost_INCLUDE_DIR} )
 
 if(Boost_FOUND)
