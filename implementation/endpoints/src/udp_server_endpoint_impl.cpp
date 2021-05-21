@@ -86,9 +86,6 @@ void udp_server_endpoint_impl::stop() {
     server_endpoint_impl::stop();
     {
         std::lock_guard<std::mutex> its_lock(socket_mutex_);
-
-        boost::asio::ip::address _destination;
-
         if (socket_.is_open()) {
             boost::system::error_code its_error;
             socket_.shutdown(socket_type::shutdown_both, its_error);
@@ -99,6 +96,9 @@ void udp_server_endpoint_impl::stop() {
 
 void udp_server_endpoint_impl::receive() {
     std::lock_guard<std::mutex> its_lock(socket_mutex_);
+
+    boost::asio::ip::address _destination;
+
     if(socket_.is_open()) {
         socket_.async_receive_from(
                 boost::asio::buffer(&recv_buffer_[0], max_message_size_),
