@@ -2,8 +2,8 @@
 // detail/reactive_socket_service_base_ext.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2015 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-// Copyright (C) 2016-2017 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (C) 2016-2019 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_boost or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -30,13 +30,13 @@ namespace asio {
 namespace detail {
 
 reactive_socket_service_base_ext::reactive_socket_service_base_ext(
-    boost::asio::io_service& io_service)
-  : reactor_(use_service<reactor>(io_service))
+    execution_context& context)
+  : reactor_(use_service<reactor>(context))
 {
   reactor_.init_task();
 }
 
-void reactive_socket_service_base_ext::shutdown_service()
+void reactive_socket_service_base_ext::base_shutdown()
 {
 }
 
@@ -83,13 +83,16 @@ void reactive_socket_service_base_ext::destroy(
 {
   if (impl.socket_ != invalid_socket)
   {
-    BOOST_ASIO_HANDLER_OPERATION(("socket", &impl, "close"));
+    BOOST_ASIO_HANDLER_OPERATION((reactor_.context(),
+          "socket", &impl, impl.socket_, "close"));
 
     reactor_.deregister_descriptor(impl.socket_, impl.reactor_data_,
         (impl.state_ & socket_ops::possible_dup) == 0);
 
     boost::system::error_code ignored_ec;
     socket_ops::close(impl.socket_, impl.state_, true, ignored_ec);
+    
+    reactor_.cleanup_descriptor_data(impl.reactor_data_);
   }
 }
 
@@ -99,13 +102,20 @@ boost::system::error_code reactive_socket_service_base_ext::close(
 {
   if (is_open(impl))
   {
-    BOOST_ASIO_HANDLER_OPERATION(("socket", &impl, "close"));
+    BOOST_ASIO_HANDLER_OPERATION((reactor_.context(),
+          "socket", &impl, impl.socket_, "close"));
 
     reactor_.deregister_descriptor(impl.socket_, impl.reactor_data_,
         (impl.state_ & socket_ops::possible_dup) == 0);
+        
+    socket_ops::close(impl.socket_, impl.state_, false, ec);
+    
+    reactor_.cleanup_descriptor_data(impl.reactor_data_);
   }
-
-  socket_ops::close(impl.socket_, impl.state_, false, ec);
+  else
+  {
+    ec = boost::system::error_code();
+  }
 
   // The descriptor is closed by the OS even if close() returns an error.
   //
@@ -119,7 +129,28 @@ boost::system::error_code reactive_socket_service_base_ext::close(
 
   return ec;
 }
+/*
+socket_type reactive_socket_service_base::release(
+    reactive_socket_service_base::base_implementation_type& impl,
+    boost::system::error_code& ec)
+{
+  if (!is_open(impl))
+  {
+    ec = boost::asio::error::bad_descriptor;
+    return invalid_socket;
+  }
 
+  BOOST_ASIO_HANDLER_OPERATION((reactor_.context(),
+        "socket", &impl, impl.socket_, "release"));
+
+  reactor_.deregister_descriptor(impl.socket_, impl.reactor_data_, false);
+  reactor_.cleanup_descriptor_data(impl.reactor_data_);
+  socket_type sock = impl.socket_;
+  construct(impl);
+  ec = boost::system::error_code();
+  return sock;
+}
+*/
 boost::system::error_code reactive_socket_service_base_ext::cancel(
     reactive_socket_service_base_ext::base_implementation_type& impl,
     boost::system::error_code& ec)
@@ -130,7 +161,8 @@ boost::system::error_code reactive_socket_service_base_ext::cancel(
     return ec;
   }
 
-  BOOST_ASIO_HANDLER_OPERATION(("socket", &impl, "cancel"));
+  BOOST_ASIO_HANDLER_OPERATION((reactor_.context(),
+        "socket", &impl, impl.socket_, "cancel"));
 
   reactor_.cancel_ops(impl.socket_, impl.reactor_data_);
   ec = boost::system::error_code();
@@ -225,7 +257,7 @@ void reactive_socket_service_base_ext::start_accept_op(
     reactor_op* op, bool is_continuation, bool peer_is_open)
 {
   if (!peer_is_open)
-    start_op(impl, reactor::read_op, op, true, is_continuation, false);
+    start_op(impl, reactor::read_op, op, is_continuation, true, false);
   else
   {
     op->ec_ = boost::asio::error::already_open;

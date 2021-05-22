@@ -2,11 +2,11 @@
 // detail/reactive_socket_recvmsg_op_ext.hpp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2015 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-// Copyright (C) 2016-2017 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
+// Copyright (c) 2003-2019 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (c) 2016-2019 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_boost or copy at http://www.boost.org/LICENSE_1_0.txt)
+// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
 #ifndef BOOST_ASIO_DETAIL_REACTIVE_SOCKET_RECVMSG_OP_EXT_HPP
@@ -20,6 +20,7 @@
 #include <boost/asio/detail/bind_handler.hpp>
 #include <boost/asio/detail/buffer_sequence_adapter.hpp>
 #include <boost/asio/detail/fenced_block.hpp>
+#include <boost/asio/detail/memory.hpp>
 #include <boost/asio/detail/reactor_op_ext.hpp>
 #include <boost/asio/detail/socket_ops_ext.hpp>
 #include <boost/asio/socket_base.hpp>
@@ -45,7 +46,7 @@ public:
   {
   }
 
-  static bool do_perform(reactor_op* base)
+  static status do_perform(reactor_op* base)
   {
     reactive_socket_recvmsg_op_base_ext* o(
         static_cast<reactive_socket_recvmsg_op_base_ext*>(base));
@@ -53,10 +54,15 @@ public:
     buffer_sequence_adapter<boost::asio::mutable_buffer,
         MutableBufferSequence> bufs(o->buffers_);
 
-    return socket_ops::non_blocking_recvmsg(o->socket_,
+    status result = socket_ops::non_blocking_recvmsg(o->socket_,
         bufs.buffers(), bufs.count(),
         o->in_flags_, o->out_flags_,
-        o->ec_, o->bytes_transferred_);
+        o->ec_, o->bytes_transferred_) ? done : not_done;
+
+    BOOST_ASIO_HANDLER_REACTOR_OPERATION((*o, "non_blocking_recvmsg",
+          o->ec_, o->bytes_transferred_));
+
+    return result;
   }
 
 private:
@@ -66,7 +72,7 @@ private:
   socket_base::message_flags& out_flags_;
 };
 
-template <typename MutableBufferSequence, typename Handler>
+template <typename MutableBufferSequence, typename Handler, typename IoExecutor>
 class reactive_socket_recvmsg_op_ext :
   public reactive_socket_recvmsg_op_base_ext<MutableBufferSequence>
 {
@@ -75,14 +81,17 @@ public:
 
   reactive_socket_recvmsg_op_ext(socket_type socket,
       const MutableBufferSequence& buffers, socket_base::message_flags in_flags,
-      socket_base::message_flags& out_flags, Handler& handler)
+      socket_base::message_flags& out_flags, Handler& handler,
+      const IoExecutor& io_ex)
     : reactive_socket_recvmsg_op_base_ext<MutableBufferSequence>(socket, buffers,
         in_flags, out_flags, &reactive_socket_recvmsg_op_ext::do_complete),
-      handler_(BOOST_ASIO_MOVE_CAST(Handler)(handler))
+      handler_(BOOST_ASIO_MOVE_CAST(Handler)(handler)),
+      io_executor_(io_ex)
   {
+    handler_work<Handler, IoExecutor>::start(handler_, io_executor_);
   }
 
-  static void do_complete(io_service* owner, operation* base,
+  static void do_complete(void* owner, operation* base,
       const boost::system::error_code& /*ec*/,
       std::size_t /*bytes_transferred*/)
   {
@@ -90,8 +99,9 @@ public:
     reactive_socket_recvmsg_op_ext* o(
         static_cast<reactive_socket_recvmsg_op_ext*>(base));
     ptr p = { boost::asio::detail::addressof(o->handler_), o, o };
+    handler_work<Handler, IoExecutor> w(o->handler_, o->io_executor_);
 
-    BOOST_ASIO_HANDLER_COMPLETION((o));
+    BOOST_ASIO_HANDLER_COMPLETION((*o));
 
     // Make a copy of the handler so that the memory can be deallocated before
     // the upcall is made. Even if we're not about to make an upcall, a
@@ -109,13 +119,14 @@ public:
     {
       fenced_block b(fenced_block::half);
       BOOST_ASIO_HANDLER_INVOCATION_BEGIN((handler.arg1_, handler.arg2_, handler.arg3_));
-      boost_asio_handler_invoke_helpers::invoke(handler, handler.handler_);
+      w.complete(handler, handler.handler_);
       BOOST_ASIO_HANDLER_INVOCATION_END;
     }
   }
 
 private:
   Handler handler_;
+  IoExecutor io_executor_;
 };
 
 } // namespace detail

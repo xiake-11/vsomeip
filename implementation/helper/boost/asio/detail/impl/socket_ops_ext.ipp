@@ -2,8 +2,8 @@
 // detail/impl/socket_ops_ext.ipp
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2015 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-// Copyright (C) 2016-2017 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
+// Copyright (c) 2003-2018 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright (C) 2016-2019 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_boost or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -59,20 +59,20 @@ signed_size_type recvfrom(socket_type s, buf* bufs, size_t count,
   if (result >= 0) {
     ec = boost::system::error_code();
 
-	// Find destination address
-	for (LPWSACMSGHDR cmsg = WSA_CMSG_FIRSTHDR(&msg);
-		 cmsg != NULL;
-	  	 cmsg = WSA_CMSG_NXTHDR(&msg, cmsg))
-	{
-	  if (cmsg->cmsg_level != IPPROTO_IP || cmsg->cmsg_type != IP_PKTINFO)
-	  	continue;
+    // Find destination address
+    for (LPWSACMSGHDR cmsg = WSA_CMSG_FIRSTHDR(&msg);
+         cmsg != NULL;
+         cmsg = WSA_CMSG_NXTHDR(&msg, cmsg))
+    {
+      if (cmsg->cmsg_level != IPPROTO_IP || cmsg->cmsg_type != IP_PKTINFO)
+        continue;
 
       struct in_pktinfo *pi = (struct in_pktinfo *) WSA_CMSG_DATA(cmsg);
-	  if (pi)
-	  {
-	    da = boost::asio::ip::address_v4(ntohl(pi->ipi_addr.s_addr));
-	  } 
-	}      
+      if (pi)
+      {
+        da = boost::asio::ip::address_v4(ntohl(pi->ipi_addr.s_addr));
+      } 
+    }      
   } else {
     dwNumberOfBytesRecvd = -1;
   }
@@ -91,20 +91,20 @@ signed_size_type recvfrom(socket_type s, buf* bufs, size_t count,
   if (result >= 0) {
     ec = boost::system::error_code();
 
-	// Find destination address
-	for (struct cmsghdr *cmsg = CMSG_FIRSTHDR(&msg);
-		 cmsg != NULL;
-	  	 cmsg = CMSG_NXTHDR(&msg, cmsg))
-	{
-	  if (cmsg->cmsg_level != IPPROTO_IP || cmsg->cmsg_type != IP_PKTINFO)
-	  	continue;
+    // Find destination address
+    for (struct cmsghdr *cmsg = CMSG_FIRSTHDR(&msg);
+         cmsg != NULL;
+         cmsg = CMSG_NXTHDR(&msg, cmsg))
+    {
+      if (cmsg->cmsg_level != IPPROTO_IP || cmsg->cmsg_type != IP_PKTINFO)
+        continue;
 
       struct in_pktinfo *pi = (struct in_pktinfo *) CMSG_DATA(cmsg);
-	  if (pi)
-	  {
-	    da = boost::asio::ip::address_v4(ntohl(pi->ipi_addr.s_addr));
-	  } 
-	}      
+      if (pi)
+      {
+        da = boost::asio::ip::address_v4(ntohl(pi->ipi_addr.s_addr));
+      } 
+    }
   }
   return result;
 #endif // defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
