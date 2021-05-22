@@ -378,7 +378,7 @@ private:
     std::size_t max_dispatch_time_;
 
     // Workaround for destruction problem
-    std::shared_ptr<logger> logger_;
+//    std::shared_ptr<logger> logger_;
 
     std::condition_variable stop_cv_;
     std::mutex start_stop_mutex_;

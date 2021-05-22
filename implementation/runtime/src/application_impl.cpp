@@ -49,7 +49,7 @@ application_impl::application_impl(const std::string &_name)
           is_dispatching_(false),
           max_dispatchers_(VSOMEIP_MAX_DISPATCHERS),
           max_dispatch_time_(VSOMEIP_MAX_DISPATCH_TIME),
-          logger_(logger::get()),
+//          logger_(logger::get()),
           stopped_(false),
           block_stopping_(false),
           is_routing_manager_host_(false),

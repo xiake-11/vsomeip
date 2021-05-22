@@ -7,8 +7,8 @@
 
 namespace vsomeip {
 
-std::shared_ptr<logger> logger::get() {
-    return logger_impl::get();
-}
+//std::shared_ptr<logger> logger::get() {
+//    return logger_impl::get();
+//}
 
 } // namespace vsomeip

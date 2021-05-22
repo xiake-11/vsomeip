@@ -34,36 +34,36 @@
 #include "../include/logger_impl.hpp"
 #include "../../configuration/include/configuration.hpp"
 #include "../include/defines.hpp"
-
+/*
 namespace logging = boost::log;
 namespace sources = boost::log::sources;
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
 namespace expressions = boost::log::expressions;
 namespace attributes = boost::log::attributes;
-
-using namespace boost::log::trivial;
-
+*/
 namespace vsomeip {
 
-std::shared_ptr<logger_impl> & logger_impl::get() {
-    static std::shared_ptr<logger_impl> the_logger__ = std::make_shared<
-            logger_impl>();
-    return the_logger__;
-}
+//std::shared_ptr<logger_impl> & logger_impl::get() {
+//    static std::shared_ptr<logger_impl> the_logger__ = std::make_shared<
+//            logger_impl>();
+//    return the_logger__;
+//}
 
-logger_impl::logger_impl()
-        : loglevel_(debug),
-          log_core_(logging::core::get()) {
-    logging::add_common_attributes();
-}
+//logger_impl::logger_impl()
+//        : loglevel_(NULL),
+//          log_core_(logging::core::get()) 
+//{
+//    logging::add_common_attributes();
+//}
 
-boost::log::sources::severity_logger_mt<boost::log::trivial::severity_level> &
-logger_impl::get_internal() {
-    return logger_;
-}
-
+//boost::log::sources::severity_logger_mt<boost::log::trivial::severity_level> &
+//logger_impl::get_internal() {
+//    return logger_;
+//}
+/*
 void logger_impl::init(const std::shared_ptr<configuration> &_configuration) {
+
     get()->loglevel_ = _configuration->get_loglevel();
 
     logging::core::get()->set_filter(
@@ -93,6 +93,7 @@ void logger_impl::init(const std::shared_ptr<configuration> &_configuration) {
            !_configuration->has_dlt_log()) {
         get()->use_null_logger();
     }
+
 }
 
 void logger_impl::enable_console() {
@@ -185,6 +186,6 @@ void logger_impl::use_null_logger() {
     file_sink_ = boost::make_shared<sink_t>(backend);
     logging::core::get()->add_sink(file_sink_);
 }
-
+*/
 } // namespace vsomeip
 

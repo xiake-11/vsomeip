@@ -68,7 +68,7 @@ public:
     VSOMEIP_EXPORT bool has_file_log() const;
     VSOMEIP_EXPORT bool has_dlt_log() const;
     VSOMEIP_EXPORT const std::string & get_logfile() const;
-    VSOMEIP_EXPORT boost::log::trivial::severity_level get_loglevel() const;
+//    VSOMEIP_EXPORT boost::log::trivial::severity_level get_loglevel() const;
 
     VSOMEIP_EXPORT std::string get_unicast_address(service_t _service, instance_t _instance) const;
 
@@ -288,7 +288,7 @@ protected:
     bool has_file_log_;
     bool has_dlt_log_;
     std::string logfile_;
-    boost::log::trivial::severity_level loglevel_;
+//    boost::log::trivial::severity_level loglevel_;
 
     std::map<std::string, std::tuple<client_t, std::size_t, std::size_t,
                 size_t, size_t, std::map<plugin_type_e, std::set<std::string>>>> applications_;

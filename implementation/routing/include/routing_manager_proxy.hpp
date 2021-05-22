@@ -235,7 +235,7 @@ private:
 
     boost::asio::steady_timer register_application_timer_;
 
-    std::shared_ptr<logger> logger_;
+//    std::shared_ptr<logger> logger_;
 
     std::mutex request_timer_mutex_;
     boost::asio::steady_timer request_debounce_timer_;

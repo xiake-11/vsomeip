@@ -10,16 +10,16 @@
 #include <dlt/dlt.h>
 #endif
 
-#include <boost/log/core.hpp>
-#include <boost/log/sinks/basic_sink_backend.hpp>
-#include <boost/log/trivial.hpp>
+//#include <boost/log/core.hpp>
+//#include <boost/log/sinks/basic_sink_backend.hpp>
+//#include <boost/log/trivial.hpp>
 
-namespace logging = boost::log;
-namespace sinks = boost::log::sinks;
+//namespace logging = boost::log;
+//namespace sinks = boost::log::sinks;
 
 namespace vsomeip
 {
-
+/*
 class dlt_sink_backend :
     public sinks::basic_sink_backend<
         sinks::combine_requirements<
@@ -40,7 +40,7 @@ private:
     DLT_DECLARE_CONTEXT(dlt_)
 #endif
 };
-
+*/
 } /* namespace vsomeip */
 
 #endif /* LOGGING_INCLUDE_DLT_SINK_BACKEND_HPP_ */

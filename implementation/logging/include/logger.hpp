@@ -7,41 +7,29 @@
 #define VSOMEIP_LOGGER_HPP
 
 #include <string>
-
-#ifdef _WIN32
 #include <iostream>
-#endif
 
 #include <vsomeip/export.hpp>
-
-#include <boost/log/sources/severity_logger.hpp>
-#include <boost/log/trivial.hpp>
 
 namespace vsomeip {
 
 class VSOMEIP_IMPORT_EXPORT logger {
 public:
-    static std::shared_ptr<logger> get();
+//    static std::shared_ptr<logger> get();
 
     virtual ~logger() {
     }
 
-    virtual boost::log::sources::severity_logger_mt<
-            boost::log::trivial::severity_level> & get_internal() = 0;
+//    virtual boost::log::sources::severity_logger_mt<
+//            boost::log::trivial::severity_level> & get_internal() = 0;
 };
 
-#define VSOMEIP_FATAL BOOST_LOG_SEV(vsomeip::logger::get()->get_internal(), \
-                boost::log::trivial::severity_level::fatal)
-#define VSOMEIP_ERROR BOOST_LOG_SEV(vsomeip::logger::get()->get_internal(), \
-                boost::log::trivial::severity_level::error)
-#define VSOMEIP_WARNING BOOST_LOG_SEV(vsomeip::logger::get()->get_internal(), \
-                boost::log::trivial::severity_level::warning)
-#define VSOMEIP_INFO BOOST_LOG_SEV(vsomeip::logger::get()->get_internal(), \
-                boost::log::trivial::severity_level::info)
-#define VSOMEIP_DEBUG BOOST_LOG_SEV(vsomeip::logger::get()->get_internal(), \
-                boost::log::trivial::severity_level::debug)
-#define VSOMEIP_TRACE BOOST_LOG_SEV(vsomeip::logger::get()->get_internal(), \
-                boost::log::trivial::severity_level::trace)
+#define VSOMEIP_FATAL std::cout << std::endl << " FATAL " << std::endl
+#define VSOMEIP_ERROR std::cout << std::endl<< " ERROR " << std::endl
+#define VSOMEIP_WARNING std::cout << std::endl<< " WARNING " << std::endl
+#define VSOMEIP_INFO std::cout << std::endl<< " INFO " << std::endl
+#define VSOMEIP_DEBUG std::cout << std::endl << " DEBUG " << std::endl
+#define VSOMEIP_TRACE std::cout << std::endl << " TRACE " << std::endl
 
 } // namespace vsomeip
 

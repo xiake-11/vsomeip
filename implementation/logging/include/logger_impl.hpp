@@ -8,19 +8,19 @@
 
 #include <memory>
 #include <string>
-
+/*
 #include <boost/log/sinks/sync_frontend.hpp>
 #include <boost/log/sinks/text_ostream_backend.hpp>
 #include <boost/log/sources/severity_logger.hpp>
 #include <boost/log/trivial.hpp>
-
+*/
 #include "logger.hpp"
 #include "dlt_sink_backend.hpp"
 
 namespace vsomeip {
 
 class configuration;
-
+/*
 BOOST_LOG_ATTRIBUTE_KEYWORD(channel, "Channel", std::string)
 BOOST_LOG_ATTRIBUTE_KEYWORD(severity, "Severity",
         boost::log::trivial::severity_level)
@@ -29,8 +29,9 @@ typedef boost::log::sinks::synchronous_sink<
         boost::log::sinks::text_ostream_backend> sink_t;
 typedef boost::log::sinks::synchronous_sink<
         dlt_sink_backend> dlt_sink_t;
-
+*/
 class logger_impl: public logger {
+/*
 public:
     static std::shared_ptr<logger_impl> & get();
     VSOMEIP_IMPORT_EXPORT static void init(const std::shared_ptr<configuration> &_configuration);
@@ -63,6 +64,7 @@ private:
 
 private:
     void use_null_logger();
+*/
 };
 
 } // namespace vsomeip

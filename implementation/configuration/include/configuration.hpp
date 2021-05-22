@@ -51,7 +51,7 @@ public:
     virtual bool has_file_log() const = 0;
     virtual bool has_dlt_log() const = 0;
     virtual const std::string & get_logfile() const = 0;
-    virtual boost::log::trivial::severity_level get_loglevel() const = 0;
+    //virtual boost::log::trivial::severity_level get_loglevel() const = 0;
 
     virtual const std::string & get_routing_host() const = 0;
 

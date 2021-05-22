@@ -48,7 +48,7 @@ configuration_impl::configuration_impl()
       has_file_log_(false),
       has_dlt_log_(false),
       logfile_("/tmp/vsomeip.log"),
-      loglevel_(boost::log::trivial::severity_level::info),
+//      loglevel_(boost::log::trivial::severity_level::info),
       is_sd_enabled_(VSOMEIP_SD_DEFAULT_ENABLED),
       sd_protocol_(VSOMEIP_SD_DEFAULT_PROTOCOL),
       sd_multicast_(VSOMEIP_SD_DEFAULT_MULTICAST),
@@ -113,7 +113,7 @@ configuration_impl::configuration_impl(const configuration_impl &_other)
     has_dlt_log_ = _other.has_dlt_log_;
     logfile_ = _other.logfile_;
 
-    loglevel_ = _other.loglevel_;
+//    loglevel_ = _other.loglevel_;
 
     routing_host_ = _other.routing_host_;
 
@@ -222,7 +222,7 @@ bool configuration_impl::load(const std::string &_name) {
     std::vector<element> its_optional_elements;
 
     // Dummy initialization; maybe we'll find no logging configuration
-    logger_impl::init(shared_from_this());
+    //logger_impl::init(shared_from_this());
 
     // Look for the standard configuration file
     read_data(its_input, its_mandatory_elements, its_failed, true);
@@ -324,7 +324,7 @@ bool configuration_impl::load_data(const std::vector<element> &_elements,
                 = load_logging(e, its_warnings) || is_logging_loaded_;
 
         if (is_logging_loaded_) {
-            logger_impl::init(shared_from_this());
+            //logger_impl::init(shared_from_this());
             for (auto w : its_warnings)
                 VSOMEIP_WARNING << w;
         }
@@ -410,6 +410,7 @@ bool configuration_impl::load_logging(
                             " Ignoring definition from " + _element.name_);
                 } else {
                     std::string its_value(i->second.data());
+/*                    
                     loglevel_
                         = (its_value == "trace" ?
                                 boost::log::trivial::severity_level::trace :
@@ -425,6 +426,7 @@ bool configuration_impl::load_logging(
                                 boost::log::trivial::severity_level::fatal :
                           boost::log::trivial::severity_level::info))))));
                     is_configured_[ET_LOGGING_LEVEL] = true;
+*/
                 }
             } else if (its_key == "version") {
                 std::stringstream its_converter;
@@ -2025,11 +2027,11 @@ bool configuration_impl::has_dlt_log() const {
 const std::string & configuration_impl::get_logfile() const {
     return logfile_;
 }
-
+/*
 boost::log::trivial::severity_level configuration_impl::get_loglevel() const {
     return loglevel_;
 }
-
+*/
 std::string configuration_impl::get_unicast_address(service_t _service,
         instance_t _instance) const {
     std::string its_unicast_address("");
